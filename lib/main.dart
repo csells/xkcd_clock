@@ -1,7 +1,7 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,29 +20,34 @@ class Clock extends StatefulWidget {
 }
 
 class _ClockState extends State<Clock> {
-  final _utcMidnightRadiansOffset = radiansFromDegrees(318.5);
+  final _utcMidnightRadiansOffset = radiansFromDegrees(-64);
   static const _secondsInDay = 86400;
   DateTime _localTime = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 1), (_) => _localTime = DateTime.now());
+    Timer.periodic(Duration(seconds: 1), (_) => setState(() => _localTime = DateTime.now()));
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text('xkcd clock')),
-        body: Stack(
+        body: Column(
           children: [
-            Image.asset('images/face.png'),
-            Transform.rotate(
-              angle: radiansFromTime(_localTime.toUtc()) + _utcMidnightRadiansOffset,
-              child: ClipOval(
-                clipper: InnerFaceClipper(),
-                child: Image.asset('images/face.png'),
-              ),
+            Stack(
+              children: [
+                Image.asset('images/face.png'),
+                Transform.rotate(
+                  angle: -(radiansFromTime(_localTime.toUtc()) + _utcMidnightRadiansOffset),
+                  child: ClipOval(
+                    clipper: InnerFaceClipper(),
+                    child: Image.asset('images/face.png'),
+                  ),
+                ),
+              ],
             ),
+            Text(DateFormat('EEEE, LLLL dd, yyyy – h:mm:ss a').format(_localTime)),
           ],
         ),
       );
