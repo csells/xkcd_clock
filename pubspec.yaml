@@ -18,7 +18,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - images/face.png
+    - assets/face.png
+  fonts:
+    - family: xkcd script
+      fonts:
+        - asset: assets/xkcd-script.ttf
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

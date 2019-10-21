@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'xkcd clock',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'xkcd script'),
         home: Clock(),
       );
 }
@@ -32,22 +32,25 @@ class _ClockState extends State<Clock> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(title: Text('xkcd clock')),
         body: Column(
           children: [
             Stack(
               children: [
-                Image.asset('images/face.png'),
+                Image.asset('assets/face.png'),
                 Transform.rotate(
                   angle: -(radiansFromTime(_localTime.toUtc()) + _utcMidnightRadiansOffset),
                   child: ClipOval(
                     clipper: InnerFaceClipper(),
-                    child: Image.asset('images/face.png'),
+                    child: Image.asset('assets/face.png'),
                   ),
                 ),
               ],
             ),
-            Text(DateFormat.yMMMMd().addPattern('–').add_jm().format(_localTime)),
+            Text(DateFormat.EEEE().format(_localTime), style: TextStyle(fontSize: 48)),
+            Text(DateFormat.yMMMMd().format(_localTime), style: TextStyle(fontSize: 20)),
+            Text(DateFormat.jm().format(_localTime), style: TextStyle(fontSize: 42)),
           ],
         ),
       );
