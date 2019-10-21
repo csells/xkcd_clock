@@ -47,7 +47,7 @@ class _ClockState extends State<Clock> {
                 ),
               ],
             ),
-            Text(DateFormat('EEEE, LLLL dd, yyyy – h:mm:ss a').format(_localTime)),
+            Text(DateFormat.yMMMMd().addPattern('–').add_jm().format(_localTime)),
           ],
         ),
       );
