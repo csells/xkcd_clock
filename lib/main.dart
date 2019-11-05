@@ -2,8 +2,25 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
-void main() => runApp(MyApp());
+void setOverrideForDesktop() {
+  if (kIsWeb) return;
+
+  if (Platform.isMacOS) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+  } else if (Platform.isLinux || Platform.isWindows) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  } else if (Platform.isFuchsia) {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+}
+
+void main() {
+  setOverrideForDesktop();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
