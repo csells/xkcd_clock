@@ -19,20 +19,25 @@ void setOverrideForDesktop() {
 
 void main() {
   setOverrideForDesktop();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         title: 'xkcd clock',
         theme: ThemeData(primarySwatch: Colors.blue, fontFamily: 'xkcd script'),
-        home: Clock(),
+        home: const Clock(),
       );
 }
 
 class Clock extends StatefulWidget {
+  const Clock({Key? key}) : super(key: key);
+
   @override
+  // ignore: library_private_types_in_public_api
   _ClockState createState() => _ClockState();
 }
 
@@ -44,20 +49,22 @@ class _ClockState extends State<Clock> {
   @override
   void initState() {
     super.initState();
-    Timer.periodic(Duration(seconds: 1), (_) => setState(() => _localTime = DateTime.now()));
+    Timer.periodic(const Duration(seconds: 1),
+        (_) => setState(() => _localTime = DateTime.now()));
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(title: Text('xkcd clock')),
+        appBar: AppBar(title: const Text('xkcd clock')),
         body: Column(
           children: [
             Stack(
               children: [
                 Image.asset('assets/face.png'),
                 Transform.rotate(
-                  angle: -(radiansFromTime(_localTime.toUtc()) + _utcMidnightRadiansOffset),
+                  angle: -(radiansFromTime(_localTime.toUtc()) +
+                      _utcMidnightRadiansOffset),
                   child: ClipOval(
                     clipper: InnerFaceClipper(),
                     child: Image.asset('assets/face.png'),
@@ -65,9 +72,12 @@ class _ClockState extends State<Clock> {
                 ),
               ],
             ),
-            Text(DateFormat.EEEE().format(_localTime), style: TextStyle(fontSize: 48)),
-            Text(DateFormat.yMMMMd().format(_localTime), style: TextStyle(fontSize: 20)),
-            Text(DateFormat.jm().format(_localTime), style: TextStyle(fontSize: 42)),
+            Text(DateFormat.EEEE().format(_localTime),
+                style: const TextStyle(fontSize: 48)),
+            Text(DateFormat.yMMMMd().format(_localTime),
+                style: const TextStyle(fontSize: 20)),
+            Text(DateFormat.jm().format(_localTime),
+                style: const TextStyle(fontSize: 42)),
           ],
         ),
       );
@@ -87,7 +97,7 @@ class InnerFaceClipper extends CustomClipper<Rect> {
 
   @override
   Rect getClip(Size size) => Rect.fromCenter(
-        center: size.center(Offset(0, 0)),
+        center: size.center(const Offset(0, 0)),
         width: size.width * percent,
         height: size.height * percent,
       );
