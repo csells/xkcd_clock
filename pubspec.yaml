@@ -1,6 +1,6 @@
 name: xkcd_clock
 description: A Flutter implementation of the xkcd clock.
-version: 0.2.0
+version: 0.3.0
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
