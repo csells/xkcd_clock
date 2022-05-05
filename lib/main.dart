@@ -2,28 +2,11 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 
-void setOverrideForDesktop() {
-  if (kIsWeb) return;
+void main() => runApp(const App());
 
-  if (Platform.isMacOS) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-  } else if (Platform.isLinux || Platform.isWindows) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.android;
-  } else if (Platform.isFuchsia) {
-    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
-  }
-}
-
-void main() {
-  setOverrideForDesktop();
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class App extends StatelessWidget {
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => MaterialApp(
@@ -45,40 +28,51 @@ class _ClockState extends State<Clock> {
   final _utcMidnightRadiansOffset = radiansFromDegrees(-64);
   static const _secondsInDay = 86400;
   DateTime _localTime = DateTime.now();
+  late Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    Timer.periodic(const Duration(seconds: 1),
+    _timer = Timer.periodic(const Duration(seconds: 1),
         (_) => setState(() => _localTime = DateTime.now()));
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(title: const Text('xkcd clock')),
-        body: Column(
-          children: [
-            Stack(
+        body: Center(
+          child: FittedBox(
+            child: Column(
               children: [
-                Image.asset('assets/face.png'),
-                Transform.rotate(
-                  angle: -(radiansFromTime(_localTime.toUtc()) +
-                      _utcMidnightRadiansOffset),
-                  child: ClipOval(
-                    clipper: InnerFaceClipper(),
-                    child: Image.asset('assets/face.png'),
-                  ),
+                Stack(
+                  children: [
+                    Image.asset('assets/face.png'),
+                    Transform.rotate(
+                      angle: -(radiansFromTime(_localTime.toUtc()) +
+                          _utcMidnightRadiansOffset),
+                      child: ClipOval(
+                        clipper: InnerFaceClipper(),
+                        child: Image.asset('assets/face.png'),
+                      ),
+                    ),
+                  ],
                 ),
+                Text(DateFormat.EEEE().format(_localTime),
+                    style: const TextStyle(fontSize: 48)),
+                Text(DateFormat.yMMMMd().format(_localTime),
+                    style: const TextStyle(fontSize: 20)),
+                Text(DateFormat.jms().format(_localTime),
+                    style: const TextStyle(fontSize: 42)),
               ],
             ),
-            Text(DateFormat.EEEE().format(_localTime),
-                style: const TextStyle(fontSize: 48)),
-            Text(DateFormat.yMMMMd().format(_localTime),
-                style: const TextStyle(fontSize: 20)),
-            Text(DateFormat.jm().format(_localTime),
-                style: const TextStyle(fontSize: 42)),
-          ],
+          ),
         ),
       );
 
